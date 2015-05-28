@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Japng Demo</string>
+    <string name="title_activity_png_index">Japng Demo</string>
+
+    <string name="hello_world">Japng Demo...</string>
+    <string name="action_settings">Settings</string>
 </resources>
