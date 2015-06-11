@@ -236,7 +236,7 @@ public class ViewTabsFragment extends Fragment {
                     } else {
                         tabContent = activity.getLayoutInflater().inflate(R.layout.view_render_item, container, false);
                         iv = (ImageView)tabContent.findViewById(R.id.view_render_image);
-                        //Drawable drawable = PngAndroid.readStream(activity, IoHelp.openStream(activity, uri));
+                        //Drawable drawable = PngAndroid.readDrawable(activity, IoHelp.openStream(activity, uri));
                         //Drawable drawable = viewActivity.getComposedAnimation(uri);
                         iv.setImageDrawable(drawable);
                         if (drawable instanceof AnimationDrawable) {

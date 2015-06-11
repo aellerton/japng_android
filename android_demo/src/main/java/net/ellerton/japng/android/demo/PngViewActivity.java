@@ -208,7 +208,8 @@ public class PngViewActivity extends ActionBarActivity {
 
     public Drawable getComposedAnimation(Uri uri) throws IOException, PngException {
         if (uri != null && !uri.equals(this.cachedUri) || this.composedAnimation == null) {
-            this.composedAnimation = PngAndroid.readStream(this, IoHelp.openStream(this, uri));
+            this.composedAnimation = PngAndroid.readDrawable(this, IoHelp.openStream(this, uri));
+            //this.composedAnimation = PngAndroid.readDrawable(this, R.drawable.png_suite_logo); // just testing
             this.cachedUri = uri;
         }
         return this.composedAnimation;

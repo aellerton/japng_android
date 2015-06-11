@@ -2,7 +2,6 @@ package net.ellerton.japng.android.api;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 
@@ -25,18 +24,18 @@ public class PngAndroid {
         return Bitmap.createBitmap(src.getPixelArray(), offset, stride, src.width, src.height, Bitmap.Config.ARGB_8888);
     }
 
-    public static Drawable readStream(Context context, InputStream is) throws PngException {
+    public static Drawable readDrawable(Context context, InputStream is) throws PngException {
         Argb8888Processor<Drawable> processor = new Argb8888Processor<Drawable>(new PngViewBuilder(context));
         return PngReadHelper.read(is, new DefaultPngChunkReader<Drawable>(processor));
     }
 
-    public static Drawable readResource(Context context, int id) throws PngException, IOException {
+    public static Drawable readDrawable(Context context, int id) throws PngException, IOException {
         //Bitmap image = BitmapFactory.decodeResource(context.getResources(), resourceId);
 
         final TypedValue value = new TypedValue();
         InputStream is = null;
         try {
-            return readStream(context, context.getResources().openRawResource(id, value));
+            return readDrawable(context, context.getResources().openRawResource(id, value));
 //            Argb8888Processor<Drawable> processor = new Argb8888Processor<Drawable>(new PngViewBuilder(context));
 //            return PngReadHelper.read(is, new DefaultPngChunkReader<Drawable>(processor));
 
@@ -52,7 +51,7 @@ public class PngAndroid {
 //        try (InputStream is = context.getResources().openRawResource(id, value)) {
 //            Argb8888Processor<Drawable> processor = new Argb8888Processor<Drawable>(new PngViewBuilder(context));
 //            return PngReadHelper.read(is, new DefaultPngChunkReader<Drawable>(processor));
-//              return readStream(context, is);
+//              return readDrawable(context, is);
 //        }
     }
 }
