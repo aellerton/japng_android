@@ -1,0 +1,61 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_show_frame">Show Frame</string>
+    <string name="pref_description_show_frame">Display a small frame around the image
+    </string>
+
+    <!--
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>-->
+
+    <string name="pref_title_add_friends_to_messages">Picture Frame</string>
+    <string-array name="pref_example_list_titles">
+        <item>None</item>
+        <item>Thin</item>
+        <item>Thick</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Animation</string>
+
+    <string name="pref_title_sync_frequency">Playback Speed</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>1 x</item>
+        <item>1.25 x</item>
+        <item>1.5 x</item>
+        <item>2 x</item>
+        <item>5 x</item>
+        <item>10 x</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>1.0</item>
+        <item>1.25</item>
+        <item>1.5</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">Background</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+</resources>

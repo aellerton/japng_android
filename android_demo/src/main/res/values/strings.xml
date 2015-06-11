@@ -1,7 +1,30 @@
 <resources>
-    <string name="app_name">Japng Demo</string>
-    <string name="title_activity_png_index">Japng Demo</string>
+    <string name="app_name">PNG Explorer</string>
+    <string name="title_activity_png_index">PNG Explorer</string>
 
-    <string name="hello_world">Japng Demo...</string>
+    <string name="index_welcome_text">Some predefined images to choose from below.</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_png_view">Png View</string>
+
+    <string name="title_section1">View</string>
+    <string name="title_section2">Frames</string>
+    <string name="title_section3">Info</string>
+    <string name="title_section4">Glide</string>
+    <string name="title_section5">Android</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="action_delay_none">1x</string>
+    <string name="action_delay_2">2x</string>
+    <string name="action_delay_5">5x</string>
+
+    <string name="action_bg_none">None</string>
+    <string name="action_bg_white">White</string>
+    <string name="action_bg_grey">Grey</string>
+    <string name="action_bg_black">Black</string>
+    <string name="action_bg_red">Red</string>
+    <string name="action_bg_green">Green</string>
+    <string name="action_bg_blue">Blue</string>
 </resources>

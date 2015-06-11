@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="image_area_gray">#C0C0C0</color>
+    <color name="heading_gray">#A0A0A0</color>
+    <color name="text_shadow">#888888</color>
+</resources>

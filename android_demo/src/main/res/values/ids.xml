@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="index_item_object" type="id"/>
+    <item name="view_status_text" type="id"/>
+    <item name="view_render_image" type="id"/>
+    <item name="view_render_image_title" type="id"/>
+
+    <item name="action_delay_none" type="id"/>
+    <item name="action_delay_2" type="id"/>
+    <item name="action_delay_5" type="id"/>
+
+    <item name="action_bg_none" type="id"/>
+    <item name="action_bg_white" type="id"/>
+    <item name="action_bg_grey" type="id"/>
+    <item name="action_bg_black" type="id"/>
+    <item name="action_bg_red" type="id"/>
+    <item name="action_bg_green" type="id"/>
+    <item name="action_bg_blue" type="id"/>
+</resources>
