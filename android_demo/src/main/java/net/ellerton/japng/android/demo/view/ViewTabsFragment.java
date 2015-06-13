@@ -390,10 +390,10 @@ public class ViewTabsFragment extends Fragment {
                 list.add("Bytes-per-row");
                 list.add(String.format("%d", sequence.header.bytesPerRow));
                 list.add("Animated?");
-                list.add(sequence.hasAnimation() ? "Yes" : "No");
-                if (sequence.hasAnimation()) {
+                list.add(sequence.isAnimated() ? "Yes" : "No");
+                if (sequence.isAnimated()) {
                     list.add("Default Image part of animation?");
-                    list.add(sequence.hasDefaultImage() ? "Yes":"No");
+                    list.add(sequence.hasDefaultImage() ? "No" : "Yes");
                     list.add("Frames");
                     list.add(""+sequence.getAnimationControl().numFrames);
                     list.add("Repeats");
@@ -487,13 +487,14 @@ public class ViewTabsFragment extends Fragment {
                 int capacity = seq.getAnimationFrames() == null ? 1: seq.getAnimationFrames().size() * 2;
                 List<Object> i = new ArrayList<>(capacity);
 
-                if (seq.hasAnimation()) {
+                if (seq.isAnimated()) {
                     if (seq.hasDefaultImage()) {
                         i.add(String.format("Default Image (outside animation): %d x %d", seq.defaultImage.width, seq.defaultImage.height));
                         i.add(PngAndroid.toBitmap(seq.defaultImage));
                     }
                     i.add(String.format("Animation with %d %s", seq.getAnimationFrames().size(), seq.getAnimationFrames().size()==1? "frame" :"frames"));
                     for (Argb8888BitmapSequence.Frame frame : seq.getAnimationFrames()) {
+                        i.add(PngAndroid.toBitmap(frame.bitmap));
                         i.add(String.format("%d x %d (%d, %d) for %dms dispose=%s, blend=%s",
                                 //frame.control.sequenceNumber,
                                 frame.control.width, frame.control.height,
@@ -501,8 +502,7 @@ public class ViewTabsFragment extends Fragment {
                                 frame.control.getDelayMilliseconds(),
                                 frame.control.disposeOp == 0 ? "None" : frame.control.disposeOp == 1 ? "Background" : "Previous",
                                 frame.control.blendOp == 0 ? "Source (copy)" : "Over (blend)"
-                                ));
-                        i.add(PngAndroid.toBitmap(frame.bitmap));
+                        ));
                     }
                 } else {
                     if (seq.hasDefaultImage()) {

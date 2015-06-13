@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by aellerton on 28/05/2015.
+ * Convenience functions to load PNGs for Android.
  */
 public class PngAndroid {
     public static Bitmap toBitmap(Argb8888Bitmap src) {
