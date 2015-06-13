@@ -2,9 +2,9 @@
 
 ## TL;DR
 
-The [japng](https://github.com/aellerton/japng) library can process PNG and APNG files, including load all frames and
-animation information, but the ``japng_android`` library is needed to compose the frames into an Android ``Drawable``
-for use in an Android app.
+If you have animated PNG (APNG) files that you want to display as animations using a ``Drawable`` in an ``ImageView``, this is the library for you.
+
+The underlying PNG processing is done by [japng](https://github.com/aellerton/japng), while ``japng_android`` composites the frames using a ``Canvas`` and produces a final ``Drawable`` to use in a ``View``.
 
 ## Simple Usage
 
