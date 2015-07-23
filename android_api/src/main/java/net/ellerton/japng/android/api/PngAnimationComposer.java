@@ -2,11 +2,11 @@ package net.ellerton.japng.android.api;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by aellerton on 1/06/2015.
+ * Takes loaded PNG frames and composes them into an android AnimationDrawable.
  */
 public class PngAnimationComposer {
     private Resources resources;
@@ -34,15 +34,40 @@ public class PngAnimationComposer {
     private PngFrameControl currentFrame;
     private List<Frame> frames;
     private int durationScale = 1;
+    private Paint srcModePaint;
+
+    /**
+     * Keep a 1x1 transparent image around as reference for creating a scaled starting bitmap.
+     * Considering this because of some reported OutOfMemory errors, and this post:
+     *
+     * http://stackoverflow.com/a/8527745/963195
+     *
+     * Specifically: "NEVER use Bitmap.createBitmap(width, height, Config.ARGB_8888). I mean NEVER!"
+     *
+     * Instead the 1x1 image (68 bytes of resources) is scaled up to the needed size.
+     * Whether or not this fixes the OOM problems is TBD...
+     */
+    static Bitmap referenceImage = null;
+
+    public static Bitmap getReferenceImage(Resources resources) {
+        if (referenceImage==null) {
+            referenceImage = BitmapFactory.decodeResource(resources, R.drawable.onepxtransparent);
+        }
+        return referenceImage;
+    }
 
     public PngAnimationComposer(Resources resources, PngHeader header, Argb8888ScanlineProcessor scanlineProcessor, PngAnimationControl animationControl) {
         this.resources = resources;
         this.header = header;
         this.scanlineProcessor = scanlineProcessor;
         this.animationControl = animationControl;
-        this.canvasBitmap = Bitmap.createBitmap(this.header.width, this.header.height, Bitmap.Config.ARGB_8888);
+
+        //this.canvasBitmap = Bitmap.createBitmap(this.header.width, this.header.height, Bitmap.Config.ARGB_8888);
+        this.canvasBitmap = Bitmap.createScaledBitmap(getReferenceImage(resources), this.header.width, this.header.height, false);
         this.canvas = new Canvas(this.canvasBitmap);
         this.frames = new ArrayList<>(animationControl.numFrames);
+        this.srcModePaint = new Paint();
+        this.srcModePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
 
     }
 
@@ -107,12 +132,13 @@ public class PngAnimationComposer {
         // Capture the current bitmap region IF it needs to be reverted after rendering
         if (2==currentFrame.disposeOp) {
             previous = Bitmap.createBitmap(canvasBitmap, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height); // or could use from frames?
-            System.out.println(String.format("Captured previous %d x %d", previous.getWidth(), previous.getHeight()));
+            //System.out.println(String.format("Captured previous %d x %d", previous.getWidth(), previous.getHeight()));
         }
 
         if (0==currentFrame.blendOp) { // SRC_OVER, not blend (for blend, leave paint null)
-            paint = new Paint();
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+            //paint = new Paint();
+            //paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+            paint = srcModePaint;
         }
 
         // Draw the new frame into place
@@ -134,31 +160,32 @@ public class PngAnimationComposer {
         //
         switch (currentFrame.disposeOp) {
             case 1: // APNG_DISPOSE_OP_BACKGROUND
-                System.out.println(String.format("Frame %d clear background (full=%s, x=%d y=%d w=%d h=%d) previous=%s", currentFrame.sequenceNumber,
-                        isFull, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height, previous));
-                if (true || isFull) {
+                //System.out.println(String.format("Frame %d clear background (full=%s, x=%d y=%d w=%d h=%d) previous=%s", currentFrame.sequenceNumber,
+                //        isFull, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height, previous));
+                //if (true || isFull) {
                     canvas.drawColor(0, PorterDuff.Mode.CLEAR); // Clear to fully transparent black
-                } else {
-                    Rect rt = new Rect(currentFrame.xOffset, currentFrame.yOffset, currentFrame.width+currentFrame.xOffset, currentFrame.height+currentFrame.yOffset);
-                    paint = new Paint();
-                    paint.setColor(0);
-                    paint.setStyle(Paint.Style.FILL);
-                    canvas.drawRect(rt, paint);
-                }
+//                } else {
+//                    Rect rt = new Rect(currentFrame.xOffset, currentFrame.yOffset, currentFrame.width+currentFrame.xOffset, currentFrame.height+currentFrame.yOffset);
+//                    paint = new Paint();
+//                    paint.setColor(0);
+//                    paint.setStyle(Paint.Style.FILL);
+//                    canvas.drawRect(rt, paint);
+//                }
                 break;
 
             case 2: // APNG_DISPOSE_OP_PREVIOUS
-                // TODO: I think this means revert to the PREVIOUS contents?
-                System.out.println(String.format("Frame %d restore previous (full=%s, x=%d y=%d w=%d h=%d) previous=%s", currentFrame.sequenceNumber,
-                        isFull, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height, previous));
+                //System.out.println(String.format("Frame %d restore previous (full=%s, x=%d y=%d w=%d h=%d) previous=%s", currentFrame.sequenceNumber,
+                //        isFull, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height, previous));
 
                 // Put the original section back
                 if (null != previous) {
-                    paint = new Paint();
-                    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                    //paint = new Paint();
+                    //paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                    paint = srcModePaint;
                     canvas.drawBitmap(previous, currentFrame.xOffset, currentFrame.yOffset, paint);
-                    //previous.recycle();
-                    System.out.println("  Restored previous "+previous.getWidth()+" x "+previous.getHeight());
+
+                    //System.out.println("  Restored previous "+previous.getWidth()+" x "+previous.getHeight());
+                    previous.recycle();
                 } else {
                     System.out.println("  Huh, no previous?");
                 }
@@ -167,7 +194,7 @@ public class PngAnimationComposer {
             case 0: // APNG_DISPOSE_OP_NONE
             default: // Default should never happen
                 // do nothing
-                System.out.println("Frame "+currentFrame.sequenceNumber+" do nothing dispose");
+                //System.out.println("Frame "+currentFrame.sequenceNumber+" do nothing dispose");
                 break;
 
         }
