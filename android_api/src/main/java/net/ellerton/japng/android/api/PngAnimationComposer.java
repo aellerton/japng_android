@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -35,6 +36,7 @@ public class PngAnimationComposer {
     private List<Frame> frames;
     private int durationScale = 1;
     private Paint srcModePaint;
+    private final Paint clearModePaint;
 
     /**
      * Keep a 1x1 transparent image around as reference for creating a scaled starting bitmap.
@@ -68,7 +70,8 @@ public class PngAnimationComposer {
         this.frames = new ArrayList<>(animationControl.numFrames);
         this.srcModePaint = new Paint();
         this.srcModePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-
+        this.clearModePaint = new Paint();
+        this.clearModePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
     public int getDurationScale() {
@@ -160,19 +163,9 @@ public class PngAnimationComposer {
         //
         switch (currentFrame.disposeOp) {
             case 1: // APNG_DISPOSE_OP_BACKGROUND
-                //System.out.println(String.format("Frame %d clear background (full=%s, x=%d y=%d w=%d h=%d) previous=%s", currentFrame.sequenceNumber,
-                //        isFull, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height, previous));
-                //if (true || isFull) {
-                    canvas.drawColor(0, PorterDuff.Mode.CLEAR); // Clear to fully transparent black
-//                } else {
-//                    Rect rt = new Rect(currentFrame.xOffset, currentFrame.yOffset, currentFrame.width+currentFrame.xOffset, currentFrame.height+currentFrame.yOffset);
-//                    paint = new Paint();
-//                    paint.setColor(0);
-//                    paint.setStyle(Paint.Style.FILL);
-//                    canvas.drawRect(rt, paint);
-//                }
+                Rect region = new Rect(currentFrame.xOffset, currentFrame.yOffset, currentFrame.xOffset + currentFrame.width, currentFrame.yOffset + currentFrame.height);
+                canvas.drawRect(region, clearModePaint);
                 break;
-
             case 2: // APNG_DISPOSE_OP_PREVIOUS
                 //System.out.println(String.format("Frame %d restore previous (full=%s, x=%d y=%d w=%d h=%d) previous=%s", currentFrame.sequenceNumber,
                 //        isFull, currentFrame.xOffset, currentFrame.yOffset, currentFrame.width, currentFrame.height, previous));
@@ -196,9 +189,7 @@ public class PngAnimationComposer {
                 // do nothing
                 //System.out.println("Frame "+currentFrame.sequenceNumber+" do nothing dispose");
                 break;
-
         }
-
 
         currentFrame = null;
     }
